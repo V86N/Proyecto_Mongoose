@@ -1,9 +1,18 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const PostSchema = new mongoose.Schema({
     title: String,
-    user: String,
+    body: String,
+    userId: {
+        type: ObjectId,
+        //ref: 'User'
+    },
 }, { timestamps: true });
+
+PostSchema.index({
+    title: "text",
+  })
 
 const Post = mongoose.model('Post', PostSchema);
 
