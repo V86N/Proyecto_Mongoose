@@ -5,6 +5,6 @@ const {authentication} = require("../middlewares/authentication")
 
 router.post("/", UserController.register)
 router.post("/login",UserController.login)
-router.post("/logout",UserController.logout)
+router.delete("/logout",authentication,UserController.logout)
 
 module.exports = router

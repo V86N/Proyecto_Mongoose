@@ -1,6 +1,6 @@
 const User = require("../models/User")
 const jwt = require('jsonwebtoken')
-const { JWT_SECRET } = require('../config/keys.js')
+const { jwt_secret } = require('../config/keys.js')
 const bcrypt = require ('bcryptjs');
 
 
@@ -20,7 +20,7 @@ const UserController = {
         const user = await User.findOne({
             email: req.body.email,
         })
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+      const token = jwt.sign({ _id: user._id }, jwt_secret);
         if (user.tokens.length > 4) user.tokens.shift();
         user.tokens.push(token);
         await user.save();
