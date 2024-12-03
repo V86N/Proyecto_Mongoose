@@ -21,7 +21,7 @@ const authentication = async(req, res, next) => {
 
 const isAuthor = async(req, res, next) => {
     try {
-        const post = await Post.findById(req.params._id);// Preguntar si findbyid esta bien
+        const post = await Post.findById(req.params._id);
         if (post.userId.toString() !== req.user._id.toString()) { 
             return res.status(403).send({ message: 'Este post no es tuyo' });
         }

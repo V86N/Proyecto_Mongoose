@@ -5,6 +5,7 @@ const  Post  = require("../models/Post")
 const PostController = {
     async create(req,res){
         try {
+            req.body.userId = req.user._id
             const newPost = await Post.create(req.body)
         res.status(201).send({message:"New post successfully created",newPost})
         } catch (error) {
@@ -14,6 +15,7 @@ const PostController = {
     },
     async update(req, res) {
         try {
+            req.body.userId = req.user._id
           const post = await Post.findByIdAndUpdate(
             req.params._id, //id del post que quiero actualizar
             req.body,// el objeto con los datos a actualizar
