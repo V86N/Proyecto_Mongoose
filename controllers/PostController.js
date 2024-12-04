@@ -85,6 +85,48 @@ async getPostsByTitle(req, res) { //Las publicaciones tienen título??
           res.status(500).send({ message: "There was a problem with your review" });
         }
       }, 
+      async like(req, res) {
+        try {
+          
+          const post = await Post.findByIdAndUpdate(
+            req.params._id,
+            { $push: { likes: req.user._id } },
+            { new: true }
+          );
+          
+          await User.findByIdAndUpdate(
+            req.user._id,
+            { $push: { wishList: req.params._id } },
+            { new: true }
+          );
+          res.send(post);
+        } catch (error) {
+          console.error(error);
+          res.status(500).send({ message: "There was a problem with your like" });
+        }
+      },
+
+      async unLike(req, res) {
+        try {
+          
+          const post = await Post.findByIdAndUpdate(
+            req.params._id,
+            { $pull: { unlikes: req.user._id } },
+            { new: true }
+          );
+          
+          await User.findByIdAndUpdate(
+            req.user._id,
+            { $pull: { wishList: req.params._id } },
+            { new: true }
+          );
+          res.send(post);
+        } catch (error) {
+          console.error(error);
+          res.status(500).send({ message: "There was a problem with your like" });
+        }
+      },
+
 }
 
 module.exports = PostController

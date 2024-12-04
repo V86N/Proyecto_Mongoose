@@ -13,7 +13,11 @@ const PostSchema = new mongoose.Schema({
         comment: String,
         }],
     tokens: [], 
-}, { timestamps: true });
+
+    likes: [{ type: ObjectId }],
+}, 
+
+{ timestamps: true });
 
 PostSchema.index({
     title: "text",
