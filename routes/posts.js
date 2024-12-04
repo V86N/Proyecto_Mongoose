@@ -12,4 +12,6 @@ router.get('/id/:_id', PostController.getById)
 router.put("/addComment/:_id",authentication, PostController.insertComment)
 router.put("/like/:_id",authentication, PostController.like)
 router.delete("/unLike/:_id", authentication, PostController.unLike)
+
+
 module.exports = router
