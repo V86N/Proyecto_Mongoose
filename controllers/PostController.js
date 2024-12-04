@@ -39,8 +39,11 @@ async delete(req, res) { //Preguntar si es correcto borrar un post por id
 
 async getAll(req, res) {
     try {
+       const {page=1,limit=10} = req.query
        const posts = await Post.find()
        .populate("reviews.userId")
+       .limit(limit)
+       .skip((page - 1) * limit);
        res.send(posts)
     } catch (error) {
         console.error(error);
