@@ -2,8 +2,14 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
 const PostSchema = new mongoose.Schema({
-    title: String,
-    body: String,
+    title: {
+        type: String,
+        required: [true, "Please enter your name"],
+      },
+    body:{
+        type: String,
+        required: [true, "Please complete the body"],
+      }, 
     userId: {
         type: ObjectId,
         ref: 'User'
