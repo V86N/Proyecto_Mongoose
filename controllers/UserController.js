@@ -7,11 +7,13 @@ const bcrypt = require ('bcryptjs');
 const UserController = {
   async register(req, res) {
     try {
+      if(!req.body.password) return res.status(400).send("Rellena tu contraseña")
       const password = bcrypt.hashSync(req.body.password,10)
       const user = await User.create({...req.body, password:password })
       res.status(201).send({ message: "Usuario registrado con exito", user });
     } catch (error) {
       console.error(error);
+      res.status(500).send(error)
     }
   },
   
@@ -27,6 +29,8 @@ const UserController = {
         res.send({ message: 'Bienvenid@ ' + user.name, token });
     } catch (error) {
         console.error(error);
+        res.status(500).send(error)
+        
     }
 },
 
