@@ -1,5 +1,5 @@
 const  Post  = require("../models/Post")
-const User = require("../models/User")
+
 
 
 const PostController = {
@@ -39,11 +39,7 @@ async delete(req, res) { //Preguntar si es correcto borrar un post por id
 
 async getAll(req, res) {
     try {
-       const {page=1,limit=10} = req.query
        const posts = await Post.find()
-       .populate("reviews.userId")
-       .limit(limit)
-       .skip((page - 1) * limit);
        res.send(posts)
     } catch (error) {
         console.error(error);
@@ -74,59 +70,17 @@ async getPostsByTitle(req, res) { //Las publicaciones tienen título??
 
     async insertComment(req, res) {
         try {
-          const post = await Post.findByIdAndUpdate(
+          const product = await Post.findByIdAndUpdate(
             req.params._id,
             { $push: { reviews: { comment:req.body.comment, userId: req.user._id } } },
             { new: true }
           );
-          res.send(post);
+          res.send(product);
         } catch (error) {
           console.error(error);
           res.status(500).send({ message: "There was a problem with your review" });
         }
-      }, 
-      async like(req, res) {
-        try {
-          
-          const post = await Post.findByIdAndUpdate(
-            req.params._id,
-            { $push: { likes: req.user._id } },
-            { new: true }
-          );
-          
-          await User.findByIdAndUpdate(
-            req.user._id,
-            { $push: { wishList: req.params._id } },
-            { new: true }
-          );
-          res.send(post);
-        } catch (error) {
-          console.error(error);
-          res.status(500).send({ message: "There was a problem with your like" });
-        }
-      },
-
-      async unLike(req, res) {
-        try {
-          
-          const post = await Post.findByIdAndUpdate(
-            req.params._id,
-            { $pull: { unlikes: req.user._id } },
-            { new: true }
-          );
-          
-          await User.findByIdAndUpdate(
-            req.user._id,
-            { $pull: { wishList: req.params._id } },
-            { new: true }
-          );
-          res.send(post);
-        } catch (error) {
-          console.error(error);
-          res.status(500).send({ message: "There was a problem with your like" });
-        }
-      },
-
+      },    
 }
 
 module.exports = PostController
