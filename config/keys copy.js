@@ -1,4 +1,4 @@
 module.exports = {
     MONGO_URI: 'Mi uri',
-    jwt_secret: "tu secretito"
+    JWT_SECRET: "tu secretito"
 }
