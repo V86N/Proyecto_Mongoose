@@ -35,6 +35,18 @@ const UserController = {
     }
 },
 
+async getInfo(req, res) {
+  try {
+    const user = await User.findById(req.user._id)
+    res.status(200).send(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      message: "Usuario no encontrado",
+    });
+  }
+},
+
 async logout(req, res) {
   try {
     await User.findByIdAndUpdate(req.user._id, {

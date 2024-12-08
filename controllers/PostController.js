@@ -27,7 +27,7 @@ const PostController = {
         }
       },
 
-async delete(req, res) { //Preguntar si es correcto borrar un post por id
+async delete(req, res) { 
     try {
         const post = await Post.findByIdAndDelete(req.params._id)
         res.send({ message: 'Post deleted', post })
@@ -46,7 +46,7 @@ async getAll(req, res) {
     }
 },
 
-async getPostsByTitle(req, res) { //Las publicaciones tienen título??
+async getPostsByTitle(req, res) { 
     try{
        const posts = await Post.find({
         $text:{
