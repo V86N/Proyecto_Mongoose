@@ -1,4 +1,5 @@
 const User = require("../models/User")
+//const Post = require("../models/Post")
 const jwt = require('jsonwebtoken')
 require("dotenv").config()
 const JWT_SECRET = process.env.JWT_SECRET
@@ -8,10 +9,10 @@ const bcrypt = require ('bcryptjs');
 const UserController = {
   async register(req, res) {
     try {
-      if(!req.body.password) return res.status(400).send("Rellena tu contraseña")
+      if(!req.body.password) return res.status(400).send("Password must be filled")
       const password = bcrypt.hashSync(req.body.password,10)
       const user = await User.create({...req.body, password:password })
-      res.status(201).send({ message: "Usuario registrado con exito", user });
+      res.status(201).send({ message: "User correctly registered", user });
     } catch (error) {
       console.error(error);
       res.status(500).send(error)
@@ -27,7 +28,7 @@ const UserController = {
         if (user.tokens.length > 4) user.tokens.shift();
         user.tokens.push(token);
         await user.save();
-        res.send({ message: 'Bienvenid@ ' + user.name, token });
+        res.send({ message: 'Welcome ' + user.name, token });
     } catch (error) {
         console.error(error);
         res.status(500).send(error)
@@ -37,12 +38,14 @@ const UserController = {
 
 async getInfo(req, res) {
   try {
+    //const posts = await Post.find(req.user._id )
     const user = await User.findById(req.user._id)
+    //.populate("posts.userId")
     res.status(200).send(user);
   } catch (error) {
     console.error(error);
     res.status(500).send({
-      message: "Usuario no encontrado",
+      message: "User not found",
     });
   }
 },
@@ -52,18 +55,36 @@ async logout(req, res) {
     await User.findByIdAndUpdate(req.user._id, {
       $pull: { tokens: req.headers.authorization },
     });
-    res.send({ message: "Desconectado con éxito" });
+    res.send({ message: "Logged out correctly" });
   } catch (error) {
     console.error(error);
     res.status(500).send({
-      message: "Hubo un problema al intentar desconectar al usuario",
+      message: "There was a problem trying to logout user",
     });
   }
 },
 
+async getUsersByName(req, res) {
+  try{
+     const users = await User.find({
+      $text:{
+          $search: req.params.name,
+      },
+     })
+     res.send(users)
+  }catch (error){
+      console.log(error);
+      }
+  },
 
-
-
+  async getById(req, res) {
+    try {
+        const user = await User.findById(req.params._id)
+        res.send(user)
+    } catch (error) {
+        console.error(error);
+    }
+},
 
 };
 
