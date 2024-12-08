@@ -1,5 +1,4 @@
 const User = require("../models/User")
-//const Post = require("../models/Post")
 const jwt = require('jsonwebtoken')
 require("dotenv").config()
 const JWT_SECRET = process.env.JWT_SECRET
@@ -38,9 +37,8 @@ const UserController = {
 
 async getInfo(req, res) {
   try {
-    //const posts = await Post.find(req.user._id )
+    
     const user = await User.findById(req.user._id)
-    //.populate("posts.userId")
     res.status(200).send(user);
   } catch (error) {
     console.error(error);
