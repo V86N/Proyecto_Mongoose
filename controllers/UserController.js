@@ -27,7 +27,7 @@ const UserController = {
         if (user.tokens.length > 4) user.tokens.shift();
         user.tokens.push(token);
         await user.save();
-        res.send({ message: 'Bienvenid@ ' + user.name, token });
+        res.send({ message: 'Bienvenid@ ' + user.name, token, user });
     } catch (error) {
         console.error(error);
         res.status(500).send(error)
@@ -37,8 +37,9 @@ const UserController = {
 
 async getInfo(req, res) {
   try {
+    const posts = await Post.find({ author: req.user._id })
     const user = await User.findById(req.user._id)
-    res.status(200).send(user);
+    res.status(200).send(user,posts,);
   } catch (error) {
     console.error(error);
     res.status(500).send({
@@ -46,6 +47,30 @@ async getInfo(req, res) {
     });
   }
 },
+
+async getUsersByTitle(req, res) { 
+  try{
+     const users = await User.find({
+      $text:{
+          $search: req.params.title,
+      },
+     }) 
+     res.send(users)
+
+  }catch (error){
+      console.log(error);
+      }
+  },
+
+  async getById(req, res) {
+    try {
+        const user = await User.findById(req.params._id)
+        res.send(user)
+    } catch (error) {
+        console.error(error);
+    }
+},
+
 
 async logout(req, res) {
   try {
@@ -60,6 +85,8 @@ async logout(req, res) {
     });
   }
 },
+
+
 
 
 
